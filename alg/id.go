@@ -15,7 +15,7 @@ import (
 )
 
 // 根据当前时间进行sha1计算，取前7位。（仿照git）
-func getShortId() string {
+func GetShortId() string {
 
 	hash := sha1.New()
 	buff := new(bytes.Buffer)
