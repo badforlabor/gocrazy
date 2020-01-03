@@ -23,5 +23,5 @@ func GetShortId() string {
 	hash.Write(buff.Bytes())
 	s := fmt.Sprintf("%016x", hash.Sum(nil))
 
-	return s
+	return s[:7]
 }
