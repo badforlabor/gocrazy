@@ -1,4 +1,4 @@
-module github.com/badforlabor/gocrazy
+module gocrazy
 
 go 1.13
 
