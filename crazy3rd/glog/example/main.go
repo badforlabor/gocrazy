@@ -2,7 +2,7 @@ package main
 
 import (
 	"flag"
-	"gocrazy/crazy3rd/glog"
+	"github.com/badforlabor/gocrazy/crazy3rd/glog"
 	"time"
 )
 

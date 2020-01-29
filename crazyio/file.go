@@ -7,7 +7,7 @@
 package crazyio
 
 import (
-	"gocrazy/crazylog"
+	"github.com/badforlabor/gocrazy/crazylog"
 	"os"
 )
 
