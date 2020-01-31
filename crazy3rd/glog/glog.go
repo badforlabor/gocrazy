@@ -627,10 +627,25 @@ func (buf *buffer) someDigits(i, d int) int {
 	return copy(buf.tmp[i:], buf.tmp[j:])
 }
 
+func getTag(s severity) string {
+	switch s {
+	case infoLog:
+		return "[INFO]"
+	case warningLog:
+		return "[WARNING]"
+	case errorLog:
+		return "[ERROR]"
+	case fatalLog:
+		return "[FATAL]"
+	}
+	return "[LOG]"
+}
+
 func (l *loggingT) println(s severity, args ...interface{}) {
 	buf, file, line := l.header(s, 0)
 	fmt.Fprintln(buf, args...)
 	l.output(s, buf, file, line, false)
+	fmt.Print(getTag(s)," ", string(buf.Bytes()))
 }
 
 func (l *loggingT) print(s severity, args ...interface{}) {
