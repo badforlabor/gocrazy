@@ -650,6 +650,7 @@ func (l *loggingT) println(s severity, args ...interface{}) {
 
 func (l *loggingT) print(s severity, args ...interface{}) {
 	l.printDepth(s, 1, args...)
+	fmt.Print(args...)
 }
 
 func (l *loggingT) printDepth(s severity, depth int, args ...interface{}) {
