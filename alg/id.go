@@ -17,11 +17,17 @@ import (
 // 根据当前时间进行sha1计算，取前7位。（仿照git）
 func GetShortId() string {
 
+	var s = GetHashId()
+	return s[:7]
+}
+
+func GetHashId() string {
+
 	hash := sha1.New()
 	buff := new(bytes.Buffer)
 	binary.Write(buff, binary.LittleEndian, time.Now().UnixNano())
 	hash.Write(buff.Bytes())
 	s := fmt.Sprintf("%016x", hash.Sum(nil))
 
-	return s[:7]
+	return s
 }
