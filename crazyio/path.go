@@ -43,6 +43,9 @@ func Remove(fullpath string)  {
 		}
 	}
 }
+func Mkdir(fullpath string) error {
+	return os.MkdirAll(fullpath, os.ModePerm)
+}
 
 func RemoveAll(wildcardPath string)  {
 	files, err := filepath.Glob(wildcardPath)
@@ -84,12 +87,24 @@ func MovePath(srcFullpath, dstFullpath string) error {
 		if e == nil {
 			if f.IsDir() {
 				filepath.Walk(srcFullpath, func(path string, info os.FileInfo, err error) error {
+					if !info.IsDir() {
+						var _, e2 = copyFile(path, filepath.Join(dstFullpath, path[len(srcFullpath):]))
+						if e2 == nil {
+							os.Remove(path)
+						} else {
+							e = e2
+						}
+					} else if len(path) > len(srcFullpath) {
+						Mkdir(filepath.Join(dstFullpath, path[len(srcFullpath):]))
+					}
 					return nil
 				})
 			}
 		} else {
-			CopyPath(srcFullpath, dstFullpath)
-			os.Remove(srcFullpath)
+			_, e = copyFile(srcFullpath, dstFullpath)
+			if e == nil {
+				os.Remove(srcFullpath)
+			}
 		}
 	}
 	return e
@@ -120,7 +135,7 @@ func copyFile(src, dst string) (w int64, err error) {
 	}
 	b, err := pathExists(destDir)
 	if b == false {
-		err = os.Mkdir(destDir, os.ModePerm) //在当前目录下生成md目录
+		err = os.MkdirAll(destDir, os.ModePerm) //在当前目录下生成md目录
 		if err != nil {
 			return
 		}

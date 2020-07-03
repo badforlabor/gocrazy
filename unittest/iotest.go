@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"github.com/badforlabor/gocrazy/alg"
 	"github.com/badforlabor/gocrazy/crazyio"
+	"io/ioutil"
+	"os"
 	"reflect"
 )
 import _ "github.com/badforlabor/gocrazy/crazylog"
@@ -42,5 +44,19 @@ func testIO() {
 		TestSlice1(t)
 		TestSlice2(t)
 		TestClone(t)
+	}
+
+	{
+		os.MkdirAll("c:/1/2", os.ModePerm)
+		os.MkdirAll("c:/1/2/3", os.ModePerm)
+		os.MkdirAll("c:/1/2/4", os.ModePerm)
+		os.MkdirAll("c:/1/2/5", os.ModePerm)
+		ioutil.WriteFile("c:/1/2/3/1.txt", []byte("1234"), os.ModePerm)
+		var e = crazyio.MovePath("c:\\1\\2", "d:/1/2")
+		if e == nil {
+			fmt.Println("移动文件成功")
+		} else {
+			fmt.Println("移动文件失败", e.Error())
+		}
 	}
 }
