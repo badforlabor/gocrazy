@@ -70,9 +70,29 @@ func CopyPath(srcFullpath, dstFullpath string) error {
 	if f.IsDir() {
 		e = copyDir(srcFullpath, dstFullpath)
 	} else {
-		e = copyFile(srcFullpath, dstFullpath)
+		_, e = copyFile(srcFullpath, dstFullpath)
 	}
-	return
+	return e
+}
+
+// 移动文件夹
+func MovePath(srcFullpath, dstFullpath string) error {
+	var e = os.Rename(srcFullpath, dstFullpath)
+	if e != nil {
+		// 手动移动
+		var f, e = os.Stat(srcFullpath)
+		if e == nil {
+			if f.IsDir() {
+				filepath.Walk(srcFullpath, func(path string, info os.FileInfo, err error) error {
+					return nil
+				})
+			}
+		} else {
+			CopyPath(srcFullpath, dstFullpath)
+			os.Remove(srcFullpath)
+		}
+	}
+	return e
 }
 
 func pathExists(path string) (bool, error) {
@@ -86,6 +106,7 @@ func pathExists(path string) (bool, error) {
 	return false, err
 }
 func copyFile(src, dst string) (w int64, err error) {
+	w = 0
 	srcFile, err := os.Open(src)
 	if err != nil {
 		return
@@ -99,7 +120,7 @@ func copyFile(src, dst string) (w int64, err error) {
 	}
 	b, err := pathExists(destDir)
 	if b == false {
-		err := os.Mkdir(destDir, os.ModePerm) //在当前目录下生成md目录
+		err = os.Mkdir(destDir, os.ModePerm) //在当前目录下生成md目录
 		if err != nil {
 			return
 		}
