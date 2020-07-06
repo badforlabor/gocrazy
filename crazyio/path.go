@@ -10,6 +10,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -108,6 +109,33 @@ func MovePath(srcFullpath, dstFullpath string) error {
 		}
 	}
 	return e
+}
+
+// 获取文件夹（只获取第一层）
+func GetFolders(pathName string, regExpStr string) []string{
+	var r, _ = regexp.Compile(regExpStr)
+
+	if len(regExpStr) == 0 {
+		r = nil
+	}
+
+	var ret []string
+	filepath.Walk(pathName, func(path string, info os.FileInfo, err error) error {
+
+		// 自身
+		if len(path) == len(pathName) {
+			return nil
+		}
+
+		if info.IsDir() {
+			if r == nil || r.MatchString(info.Name()) {
+				ret = append(ret, path)
+			}
+			return filepath.SkipDir
+		}
+		return nil
+	})
+	return ret
 }
 
 func pathExists(path string) (bool, error) {
