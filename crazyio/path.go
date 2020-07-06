@@ -14,6 +14,11 @@ import (
 	"strings"
 )
 
+// 格式化路径（转化成操作系统格式的路径）
+func FormatPath(fullPath string) string {
+	return filepath.Join(filepath.SplitList(fullPath)...)
+}
+
 // d:/folder1/ -> folder1
 // d:/folder1/file.txt -> folder1
 // d:/folder1 -> folder1
