@@ -18,4 +18,6 @@ func (self *MyTest) Errorf(format string, args ...interface{}) {
 func main() {
 	TestEvent()
 	testIO()
+
+	testTools()
 }

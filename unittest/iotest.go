@@ -16,6 +16,7 @@ import (
 )
 import _ "github.com/badforlabor/gocrazy/crazylog"
 import _ "github.com/badforlabor/gocrazy/crazyos"
+import _ "github.com/badforlabor/gocrazy/crazytools"
 
 func testIO() {
 	crazyio.AppendFile("test.txt", "123")
