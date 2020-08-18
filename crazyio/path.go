@@ -16,7 +16,10 @@ import (
 
 // 格式化路径（转化成操作系统格式的路径）
 func FormatPath(fullPath string) string {
-	return filepath.Join(filepath.SplitList(fullPath)...)
+	fullPath = filepath.Clean(fullPath)
+	//var sep = string(os.PathSeparator)
+	//return strings.Join(strings.Split(fullPath, sep), sep)
+	return fullPath
 }
 
 // d:/folder1/ -> folder1
