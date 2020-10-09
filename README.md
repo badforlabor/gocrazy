@@ -23,8 +23,5 @@
 
 ```
 go get -u github.com/badforlabor/gocrazy
-
-require gocrazy v0.0.0-20200103063833-9bc669847896
-replace gocrazy => github.com/badforlabor/gocrazy v0.0.0-20200103063833-9bc669847896
 ```
 
