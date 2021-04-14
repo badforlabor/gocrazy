@@ -16,7 +16,14 @@ var myLogger *Logger
 var LogFileName = "example.log"
 var StructLog = false
 
+var inited = false
 func BaseInit() {
+	if inited {
+		return
+	}
+
+	inited = true
+
 	dir := getCurPath()
 	dir = path.Join(dir, "logs")
 	os.Mkdir(dir, os.ModeDir)
