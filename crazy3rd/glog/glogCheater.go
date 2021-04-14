@@ -87,13 +87,13 @@ func Info(args ...interface{}) {
 // InfoDepth acts as Info but uses depth to determine which call frame to log.
 // InfoDepth(0, "msg") is the same as Info("msg").
 func InfoDepth(depth int, args ...interface{}) {
-	myLogger.Infoln(sprintf(args...))
+	Info(args...)
 }
 
 // Infoln logs to the INFO log.
 // Arguments are handled in the manner of fmt.Println; a newline is appended if missing.
 func Infoln(args ...interface{}) {
-	myLogger.Infoln(sprintf(args...))
+	Info(args...)
 }
 
 // Infof logs to the INFO log.
@@ -111,13 +111,13 @@ func Warning(args ...interface{}) {
 // WarningDepth acts as Warning but uses depth to determine which call frame to log.
 // WarningDepth(0, "msg") is the same as Warning("msg").
 func WarningDepth(depth int, args ...interface{}) {
-	myLogger.Warnln(sprintf(args...))
+	Warning(args...)
 }
 
 // Warningln logs to the WARNING and INFO logs.
 // Arguments are handled in the manner of fmt.Println; a newline is appended if missing.
 func Warningln(args ...interface{}) {
-	myLogger.Warnln(sprintf(args...))
+	Warning(args...)
 }
 
 // Warningf logs to the WARNING and INFO logs.
@@ -135,13 +135,13 @@ func Error(args ...interface{}) {
 // ErrorDepth acts as Error but uses depth to determine which call frame to log.
 // ErrorDepth(0, "msg") is the same as Error("msg").
 func ErrorDepth(depth int, args ...interface{}) {
-	myLogger.Errorln(sprintf(args...))
+	Error(args...)
 }
 
 // Errorln logs to the ERROR, WARNING, and INFO logs.
 // Arguments are handled in the manner of fmt.Println; a newline is appended if missing.
 func Errorln(args ...interface{}) {
-	myLogger.Errorln(sprintf(args...))
+	Error(args...)
 }
 
 // Errorf logs to the ERROR, WARNING, and INFO logs.
@@ -160,14 +160,14 @@ func Fatal(args ...interface{}) {
 // FatalDepth acts as Fatal but uses depth to determine which call frame to log.
 // FatalDepth(0, "msg") is the same as Fatal("msg").
 func FatalDepth(depth int, args ...interface{}) {
-	myLogger.Errorln(sprintf(args...))
+	Fatal(args...)
 }
 
 // Fatalln logs to the FATAL, ERROR, WARNING, and INFO logs,
 // including a stack trace of all running goroutines, then calls os.Exit(255).
 // Arguments are handled in the manner of fmt.Println; a newline is appended if missing.
 func Fatalln(args ...interface{}) {
-	myLogger.Errorln(sprintf(args...))
+	Fatal(args...)
 }
 
 // Fatalf logs to the FATAL, ERROR, WARNING, and INFO logs,
