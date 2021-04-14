@@ -10,6 +10,8 @@ func main() {
 
 	flag.Parse()
 
+	//glog.LogFileName = "log.log"
+	//glog.StructLog = true
 	glog.BaseInit()
 	defer glog.Flush()
 

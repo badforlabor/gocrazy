@@ -20,12 +20,14 @@ import (
 	"io"
 	"os"
 	"path"
+	log2 "log"
 )
 
 // Configuration for logging
 type Config struct {
 	// Enable console logging
 	ConsoleLoggingEnabled bool
+	PrettyConsoleLoggingEnabled bool
 
 	// EncodeLogsAsJson makes the log framework log JSON
 	EncodeLogsAsJson bool
@@ -45,7 +47,28 @@ type Config struct {
 }
 
 type Logger struct {
-	*zerolog.Logger
+	Inside *zerolog.Logger
+}
+func (self *Logger) Infoln(str string) {
+	if self.Inside == nil {
+		log2.Println("[Info]", str)
+	} else {
+		self.Inside.Info().Msg(str)
+	}
+}
+func (self *Logger) Warnln(str string) {
+	if self.Inside == nil {
+		log2.Println("[Warn]", str)
+	} else {
+		self.Inside.Info().Msg(str)
+	}
+}
+func (self *Logger) Errorln(str string) {
+	if self.Inside == nil {
+		log2.Println("[Error]", str)
+	} else {
+		self.Inside.Info().Msg(str)
+	}
 }
 
 
@@ -57,16 +80,27 @@ type Logger struct {
 //
 // The output log file will be located at /var/log/service-xyz/service-xyz.log and
 // will be rolled according to configuration set.
-func Configure(config Config) *Logger {
+func Configure(config Config, structLog bool) *Logger {
 	var writers []io.Writer
 
 	if config.ConsoleLoggingEnabled {
+		writers = append(writers, os.Stdout)
+	}
+	if config.PrettyConsoleLoggingEnabled {
 		writers = append(writers, zerolog.ConsoleWriter{Out: os.Stderr})
 	}
 	if config.FileLoggingEnabled {
 		writers = append(writers, newRollingFile(config))
 	}
 	mw := io.MultiWriter(writers...)
+
+	var retLog = &Logger{Inside:nil}
+
+	// golang自带的日志
+	if !structLog {
+		log2.SetOutput(mw)
+		return retLog
+	}
 
 	// zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	logger := zerolog.New(mw).With().Timestamp().Logger()
@@ -81,9 +115,9 @@ func Configure(config Config) *Logger {
 		Int("maxAgeInDays", config.MaxAge).
 		Msg("logging configured")
 
-	return &Logger{
-		Logger: &logger,
-	}
+	retLog.Inside = &logger
+
+	return retLog
 }
 
 func newRollingFile(config Config) io.Writer {
@@ -100,7 +134,7 @@ func newRollingFile(config Config) io.Writer {
 		rotatelogs.ForceNewFile(),
 	)
 	if e != nil {
-		fmt.Println("创建日志：", e)
+		fmt.Println("create log failed：", e)
 	}
 	return rot
 
