@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"golang.org/x/sys/windows/svc"
 	"time"
 
 	//"time"
@@ -22,6 +23,8 @@ import (
 	"path"
 	log2 "log"
 )
+
+var svcIsWindowsService func()(bool, error)
 
 // Configuration for logging
 type Config struct {
@@ -84,7 +87,13 @@ func Configure(config Config, structLog bool) *Logger {
 	var writers []io.Writer
 
 	if config.ConsoleLoggingEnabled {
-		writers = append(writers, os.Stdout)
+		var ws = false
+		if svcIsWindowsService != nil {
+			ws, _ = svcIsWindowsService()
+		}
+		if !ws {
+			writers = append(writers, os.Stdout)
+		}
 	}
 	if config.PrettyConsoleLoggingEnabled {
 		writers = append(writers, zerolog.ConsoleWriter{Out: os.Stderr})
