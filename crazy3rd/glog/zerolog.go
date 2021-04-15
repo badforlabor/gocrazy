@@ -12,7 +12,6 @@ import (
 	"fmt"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"golang.org/x/sys/windows/svc"
 	"time"
 
 	//"time"

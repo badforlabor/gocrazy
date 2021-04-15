@@ -6,7 +6,10 @@
 
 package crazyos
 
-import "net"
+import (
+	"github.com/kardianos/osext"
+	"net"
+)
 
 func GetLocalIP() string {
 	addrs, err := net.InterfaceAddrs()
@@ -22,4 +25,9 @@ func GetLocalIP() string {
 		}
 	}
 	return ""
+}
+
+func GetExecFolder() string {
+	var ret, _ = osext.ExecutableFolder()
+	return ret
 }

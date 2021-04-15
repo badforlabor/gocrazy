@@ -2,6 +2,7 @@ package glog
 
 import (
 	"fmt"
+	"github.com/badforlabor/gocrazy/crazyos"
 	"os"
 	"os/exec"
 	"path"
@@ -24,7 +25,7 @@ func BaseInit() {
 
 	inited = true
 
-	dir := getCurPath()
+	dir := crazyos.GetExecFolder()
 	dir = path.Join(dir, "logs")
 	os.Mkdir(dir, os.ModeDir)
 
