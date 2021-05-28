@@ -60,4 +60,13 @@ func testIO() {
 			fmt.Println("移动文件失败", e.Error())
 		}
 	}
+
+	{
+		var folders = crazyio.GetFolders("D:\\Program Files (x86)", ".*")
+		fmt.Println(folders)
+	}
+	{
+		var folders = crazyio.GetFolders("./", ".*")
+		fmt.Println(folders)
+	}
 }
