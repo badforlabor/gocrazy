@@ -4,69 +4,81 @@ import (
 	"fmt"
 	"github.com/badforlabor/gocrazy/crazyos"
 	"os"
-	"os/exec"
 	"path"
-	"path/filepath"
-	"strings"
 )
-
-var dir string = ""
 
 var myLogger *Logger
 
-var LogFileName = "example.log"
+const defaultLogFileName = "log.log"
+
+var LogFileName = defaultLogFileName
 var StructLog = false
 
-var inited = false
 func BaseInit() {
+
+	if LogFileName == defaultLogFileName {
+		LogFileName = crazyos.GetAppName()
+	}
+
+	if len(LogFileName) == 0 {
+		LogFileName = defaultLogFileName
+	}
+
+	dir := crazyos.GetExecFolder()
+	dir = path.Join(dir, "logs")
+
+	var cfg = GetDefaultLogConfig()
+
+	cfg.Filename = LogFileName
+	cfg.Directory = dir
+
+
+	BaseInitWithConfig(cfg)
+}
+
+var inited = false
+func BaseInitWithConfig(cfg *Config) {
 	if inited {
 		return
 	}
 
 	inited = true
 
-	dir := crazyos.GetExecFolder()
-	dir = path.Join(dir, "logs")
-	os.Mkdir(dir, os.ModeDir)
+	os.Mkdir(cfg.Directory, 0666)
 
-	var cfg = Config{ConsoleLoggingEnabled:true, EncodeLogsAsJson:false,
-		FileLoggingEnabled:true, Directory:dir, Filename:LogFileName,
-		MaxBackups:100,MaxAge:7, MaxSize:32}
-	myLogger = Configure(cfg, StructLog)
-
-	Cheat(dir)
+	myLogger = Configure(*cfg, StructLog)
 
 	//MaxSize = 1024 * 1024 * 16
 }
+
+func GetDefaultLogConfig() *Config {
+
+	var logfilename = crazyos.GetAppName()
+	var logDir = ""
+
+	logDir = crazyos.GetExecFolder()
+	logDir = path.Join(logDir, "logs")
+
+	var cfg = Config { ConsoleLoggingEnabled:true, EncodeLogsAsJson:false,
+		FileLoggingEnabled:true, Directory:logDir, Filename:logfilename,
+		MaxBackups:100,MaxAge:7, MaxSize:32}
+
+
+	return &cfg
+}
+
 func Close() {
 
 }
 
 func Cheat(tmpdir string) {
-	dir = tmpdir
+
 	// 设置输出路径
 	//logDir = &dir
 }
 
 func getCurPath() string {
-	fmt.Println(os.Args[0])
-	file, _ := exec.LookPath(os.Args[0])
-
-	if len(file) == 0 {
-		file = os.Args[0]
-	}
-
-	//得到全路径，比如在windows下E:\\golang\\test\\a.exe
-	path, _ := filepath.Abs(file)
-
-	//将全路径用\\分割，得到4段，①E: ②golang ③test ④a.exe
-	splitstring := strings.Split(path, string(os.PathSeparator))
-
-	splitstring = splitstring[:len(splitstring) - 1]
-
-	var rst = strings.Join(splitstring, string(os.PathSeparator))
-
-	return rst
+	return crazyos.GetExecFolder()
 }
 
 // Flush flushes all pending log I/O.

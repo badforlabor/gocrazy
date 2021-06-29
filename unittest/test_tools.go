@@ -17,6 +17,7 @@ func testTools() {
 	testWait()
 	testWait2()
 
+	testWorker()
 }
 
 func testWait() {

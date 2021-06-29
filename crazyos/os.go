@@ -7,8 +7,10 @@
 package crazyos
 
 import (
+	"github.com/badforlabor/gocrazy/crazyio"
 	"github.com/kardianos/osext"
 	"net"
+	"os"
 )
 
 func GetLocalIP() string {
@@ -30,4 +32,12 @@ func GetLocalIP() string {
 func GetExecFolder() string {
 	var ret, _ = osext.ExecutableFolder()
 	return ret
+}
+
+func GetAppName() string {
+	if len(os.Args) > 0 {
+		return crazyio.GetExeName(os.Args[0])
+	}
+
+	return ""
 }

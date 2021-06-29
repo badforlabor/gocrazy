@@ -42,6 +42,16 @@ func GetLastFolder(fullpath string) string {
 	return fullpath[idx:]
 }
 
+// 获取exe的名字
+func GetExeName(fullpath string) string {
+	var s = filepath.Base(fullpath)
+	var n = strings.IndexByte(s, '.')
+	if n >= 0 {
+		return s[0:n]
+	}
+	return s
+}
+
 func Remove(fullpath string)  {
 	info, err := os.Stat(fullpath)
 	if err == nil {
