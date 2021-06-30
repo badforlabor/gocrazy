@@ -5,6 +5,7 @@ import (
 	"github.com/badforlabor/gocrazy/crazyos"
 	"os"
 	"path"
+	"strings"
 )
 
 var myLogger *Logger
@@ -87,8 +88,9 @@ func Flush() {
 }
 
 func sprintf(args ...interface{}) string {
-	var str = fmt.Sprintln(args...)
-	return str[:len(str)-1]
+	var str = fmt.Sprint(args...)
+	str = strings.Trim(str, "\r\n")
+	return str
 }
 
 // Info logs to the INFO log.

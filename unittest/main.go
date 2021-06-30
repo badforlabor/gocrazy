@@ -6,7 +6,10 @@
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/badforlabor/gocrazy/crazy3rd/glog"
+)
 
 type MyTest struct {
 
@@ -16,6 +19,13 @@ func (self *MyTest) Errorf(format string, args ...interface{}) {
 }
 
 func main() {
+	glog.BaseInit()
+	glog.Infoln("1\r\n")
+	glog.Infoln("2")
+	glog.Info("3")
+	glog.Warningln("3")
+
+
 	TestEvent()
 	testIO()
 
