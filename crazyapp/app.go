@@ -13,8 +13,10 @@ import (
 	"runtime/debug"
 )
 
+// 主进程。用来支持“单线程”工作
 var MainThread *Worker
 
+// 服务类型的app
 func CallMain(mainFunc func()) {
 
 	mainSvrQuitCallback = QuitAction
@@ -23,6 +25,13 @@ func CallMain(mainFunc func()) {
 		BaseInit()
 		mainFunc()
 	})
+}
+
+// 普通app
+func CallNormalMain(mainFunc func()) {
+	BaseInit()
+	mainFunc()
+	WaitQuit()
 }
 
 func WaitQuit() {
