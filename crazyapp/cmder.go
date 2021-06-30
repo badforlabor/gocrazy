@@ -72,11 +72,11 @@ func (self *Cmder) Run(callback CmderCallback) error {
 	self.outBuffer.Reset()
 
 	go func() {
-		self.copyAndCapture(CmdStdOut, self.pErr, &self.errBuffer, callback)
+		self.copyAndCapture(CmdStdErr, self.pErr, &self.errBuffer, callback)
 		self.wg.Done()
 	}()
 	go func() {
-		self.copyAndCapture(CmdStdErr, self.pOut, &self.outBuffer, callback)
+		self.copyAndCapture(CmdStdOut, self.pOut, &self.outBuffer, callback)
 		self.wg.Done()
 	}()
 
