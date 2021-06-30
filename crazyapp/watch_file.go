@@ -33,6 +33,8 @@ func WatchMonify(filename string, callback func()) *fsnotify.Watcher {
 	err = watcher.Add(filename)
 	if err != nil {
 		glog.Errorf("监视文件失败！err=%v, filename=%v", err.Error(), filename)
+	} else {
+		glog.Infof("监视文件:%v", filename)
 	}
 	return watcher
 }
