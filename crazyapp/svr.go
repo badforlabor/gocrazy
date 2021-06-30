@@ -21,6 +21,8 @@ import (
 	"time"
 )
 
+var svcIsWindowsService func()(bool, error)
+
 type program struct{}
 func (p *program) Start(s service.Service) error {
 	go p.run()

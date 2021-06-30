@@ -23,16 +23,17 @@ func CallMain(mainFunc func()) {
 
 	callMain(func() {
 		BaseInit()
-		mainFunc()
+		RunCallback(mainFunc)
 	})
 }
 
 // 普通app
 func CallNormalMain(mainFunc func()) {
 	BaseInit()
-	mainFunc()
+	RunCallback(mainFunc)
 	WaitQuit()
 }
+
 
 func WaitQuit() {
 
@@ -83,4 +84,14 @@ func BaseInit() {
 
 	MainThread = NewWorker()
 
+}
+
+// 是否是服务
+func IsServiceApp() bool {
+	if svcIsWindowsService != nil {
+		var b, _ = svcIsWindowsService()
+		return b
+	}
+
+	return false
 }
