@@ -7,23 +7,24 @@
 package crazyio
 
 import (
-	"github.com/badforlabor/gocrazy/crazylog"
 	"os"
 	"path/filepath"
 	"strings"
 )
 
 // 追加内容
-func AppendFile(filename string, text string) {
+func AppendFile(filename string, text string) error {
 	f, err := os.OpenFile(filename,
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
-		crazylog.Println(err)
+		return err
 	}
+
 	defer f.Close()
 	if _, err := f.WriteString(text); err != nil {
-		crazylog.Println(err)
+		return err
 	}
+	return nil
 }
 
 // 文件名

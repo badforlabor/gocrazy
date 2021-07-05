@@ -13,5 +13,6 @@ require (
 	github.com/rs/zerolog v1.21.0
 	github.com/stretchr/testify v1.6.1
 	golang.org/x/sys v0.0.0-20210119212857-b64e53b001e4
+	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gopkg.in/yaml.v2 v2.2.2 // indirect
 )
