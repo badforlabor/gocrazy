@@ -8,6 +8,7 @@ package crazyio
 
 import (
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -97,8 +98,50 @@ func CopyPath(srcFullpath, dstFullpath string) error {
 	return e
 }
 
+// 删除空文件夹
+func DelFolderIfEmpty(folder string) error {
+	files, err := ioutil.ReadDir(folder)
+	if err != nil {
+		return err
+	}
+
+	if len(files) != 0 {
+		return nil
+	}
+
+	err = os.Remove(folder)
+	return err
+}
+
+// 删除空文件夹
+func DelEmptyFolder(src string) {
+
+	var folderlist = make([]string, 0, 4096)
+
+	filepath.Walk(src, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			folderlist = append(folderlist, path)
+		}
+
+		return nil
+	})
+
+	var cnt = len(folderlist)
+	for i, _ := range folderlist {
+		DelFolderIfEmpty(folderlist[cnt - i - 1])
+	}
+}
+
 // 移动文件夹
 func MovePath(srcFullpath, dstFullpath string) error {
+	return MovePathWithCallback(srcFullpath, dstFullpath, func(string,error) {})
+}
+
+// 移动文件夹
+func MovePathWithCallback(srcFullpath, dstFullpath string, callback func(string, error)) error {
 	var e = os.Rename(srcFullpath, dstFullpath)
 	if e != nil {
 		// 手动移动
@@ -107,24 +150,32 @@ func MovePath(srcFullpath, dstFullpath string) error {
 			if f.IsDir() {
 				filepath.Walk(srcFullpath, func(path string, info os.FileInfo, err error) error {
 					if !info.IsDir() {
-						var _, e2 = copyFile(path, filepath.Join(dstFullpath, path[len(srcFullpath):]))
+						var dst2 = filepath.Join(dstFullpath, path[len(srcFullpath):])
+						var e2 = moveFile(path, dst2)
 						if e2 == nil {
-							os.Remove(path)
+
 						} else {
 							e = e2
 						}
+						callback(dst2, e)
 					} else if len(path) > len(srcFullpath) {
 						Mkdir(filepath.Join(dstFullpath, path[len(srcFullpath):]))
 					}
 					return nil
 				})
+
+				// 删除空文件夹
+				DelEmptyFolder(srcFullpath)
 			}
 		} else {
 			_, e = copyFile(srcFullpath, dstFullpath)
 			if e == nil {
 				os.Remove(srcFullpath)
 			}
+			callback(dstFullpath, e)
 		}
+	} else {
+		callback(dstFullpath, e)
 	}
 	return e
 }
@@ -154,6 +205,11 @@ func GetFolders(pathName string, regExpStr string) []string{
 		return nil
 	})
 	return ret
+}
+
+func PathExists(path string) bool {
+	var b, _ = pathExists(path)
+	return b
 }
 
 func pathExists(path string) (bool, error) {
@@ -216,4 +272,25 @@ func copyDir(src string, dest string) error {
 	})
 
 	return err
+}
+
+func moveFile(srcFullpath, dstFullpath string) error {
+	var e = os.Rename(srcFullpath, dstFullpath)
+	if e == nil {
+		return nil
+	}
+
+	var f, e2 = os.Stat(srcFullpath)
+	if e2 != nil {
+		return e2
+	}
+
+	if f.IsDir() {
+		return nil
+	}
+	_, e = copyFile(srcFullpath, dstFullpath)
+	if e == nil {
+		os.Remove(srcFullpath)
+	}
+	return e
 }

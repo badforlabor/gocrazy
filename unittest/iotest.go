@@ -59,6 +59,10 @@ func testIO() {
 		} else {
 			fmt.Println("移动文件失败", e.Error())
 		}
+
+		if crazyio.PathExists("c:/1/2/4") {
+			fmt.Println("自动删除文件失败")
+		}
 	}
 
 	{
