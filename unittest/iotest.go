@@ -13,6 +13,7 @@ import (
 	"io/ioutil"
 	"os"
 	"reflect"
+	"time"
 )
 import _ "github.com/badforlabor/gocrazy/crazylog"
 import _ "github.com/badforlabor/gocrazy/crazyos"
@@ -72,5 +73,9 @@ func testIO() {
 	{
 		var folders = crazyio.GetFolders("./", ".*")
 		fmt.Println(folders)
+	}
+
+	{
+		crazyio.DeleteFiles("c:/1/", `.*\.log`, time.Hour * 24 * 7)
 	}
 }

@@ -42,6 +42,8 @@ func main() {
 		testIO()
 
 		testTools()
+
+		testNet()
 	}
 
 	if false {
